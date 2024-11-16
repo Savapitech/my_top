@@ -7,18 +7,11 @@
 
 MAKEFLAGS += -j
 
-NAME := a.out
-
-LIB_NAME := libmy.a
+NAME := my_top
 
 SRC := $(wildcard src/*.c)
 SRC += $(wildcard src/flags/*.c)
 SRC += $(wildcard src/utils/*.c)
-
-LIB_SRC := $(wildcard lib/my/*.c)
-LIB_SRC += $(wildcard lib/my/printf/*.c)
-LIB_SRC += $(wildcard lib/my/printf/baby/*.c)
-LIB_SRC += $(wildcard lib/my/printf/handler/*.c)
 
 BUILD_DIR := .build
 
@@ -26,16 +19,12 @@ TEST_SRC := tests/main.c
 TEST_OBJ := $(TEST_SRC:%.c=$(BUILD_DIR)/%.o)
 
 OBJ := $(SRC:%.c=$(BUILD_DIR)/%.o)
-LIB_OBJ := $(LIB_SRC:%.c=$(BUILD_DIR)/%.o)
 
 CC := gcc
 
-CFLAGS += -Wall -Wextra -g3 -O3
+CFLAGS += -Wall -Wextra -g3
 CFLAGS += -iquote ./include
 CFLAGS += -Wno-unused-parameter
-
-LDFLAGS += -L .
-LDLIBS := -lmy
 
 oui: $(NAME)
 
@@ -43,11 +32,8 @@ $(BUILD_DIR)/%.o: %.c
 	@ mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(LIB_NAME): $(LIB_OBJ)
-	ar rc $(LIB_NAME) $(LIB_OBJ)
-
-$(NAME): $(LIB_NAME) $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) $(LDLIBS) -o $(NAME)
+$(NAME): $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
 clean:
 	$(RM) $(OBJ)
@@ -60,7 +46,7 @@ fclean:
 re:	fclean oui
 
 test: $(NAME) $(TEST_OBJ)
-	$(CC) $(CFLAGS) -o $@ $(TEST_OBJ) $(LDFLAGS) $(LDLIBS)
+	$(CC) $(CFLAGS) -o $@ $(TEST_OBJ)
 
 tests_run: test
 	./$<
