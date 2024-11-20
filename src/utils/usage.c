@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 
-void printf_usage(void)
+void print_usage(void)
 {
     printf("Usage:\n  my_top -h | -d secs -n max -u|U user\n");
 }

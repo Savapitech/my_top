@@ -12,6 +12,8 @@ NAME := my_top
 SRC := $(wildcard src/*.c)
 SRC += $(wildcard src/flags/*.c)
 SRC += $(wildcard src/utils/*.c)
+SRC += $(wildcard src/getters/*.c)
+SRC += $(wildcard src/render/*.c)
 
 BUILD_DIR := .build
 
@@ -33,14 +35,13 @@ $(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) -lncurses -o $(NAME)
 
 clean:
 	$(RM) $(OBJ)
 
 fclean:
 	$(RM) -r $(NAME) $(BUILD_DIR)
-	$(RM) $(LIB_NAME)
 
 .NOTPARALLEL: re
 re:	fclean oui

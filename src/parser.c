@@ -23,7 +23,7 @@ void parse_flags_value(tf_t *tf, int i)
                 i++;
             if (i == tf->ac) {
                 fprintf(stderr, "top: -U requires argument");
-                exit(EXIT_FAILURE);
+                exit(TOP_FAILURE);
             }
             tf->flags.user = tf->av[i];
             break;
@@ -37,12 +37,12 @@ void parse_flag(tf_t *tf, int i)
     for (; *tf->av[i] != '\0'; tf->av[i]++) {
         if (stridx(FLAGS, *tf->av[i]) == -1) {
             fprintf(stderr, "top: unknown option '%c'\n", *tf->av[i]);
-            printf_usage();
-            exit(EXIT_FAILURE);
+            print_usage();
+            exit(TOP_FAILURE);
         }
         if (*tf->av[i] == 'h') {
-            printf_usage();
-            exit(EXIT_SUCCESS);
+            print_usage();
+            exit(TOP_SUCCESS);
         }
         parse_flags_value(tf, i);
     }
@@ -55,13 +55,13 @@ int parse_arg(tf_t *tf, int i)
         if (*tf->av[i] == '-')
             parse_flag(tf, i);
     }
-    return EXIT_SUCCESS;
+    return TOP_SUCCESS;
 }
 
 int parser(tf_t *tf)
 {
     for (int i = 1; i < tf->ac; i++)
         if (parse_arg(tf, i))
-            return EXIT_FAILURE;
-    return EXIT_SUCCESS;
+            return TOP_FAILURE;
+    return TOP_SUCCESS;
 }
