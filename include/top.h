@@ -49,4 +49,5 @@ int read_file(tf_t *, char *);
 int init_ncurses(tf_t *);
 int get_uptime(tf_t *);
 void print_uptime(tf_t *);
+void print_time(void);
 #endif /* TOP_H */
