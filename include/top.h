@@ -98,4 +98,5 @@ int get_uid(tf_t *, int, char *);
 int get_gid(tf_t *, int, char *);
 int get_virt(tf_t *, int, char *);
 int get_pr(tf_t *, int, char *);
+int get_ni(tf_t *, int, char *);
 #endif /* TOP_H */

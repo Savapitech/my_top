@@ -18,8 +18,9 @@ void print_procs(tf_t *tf)
     for (int i = 0; i < tf->processes.total && i < tf->winsize->ws_row - 4;
         i++) {
         if (tf->pf[i].pid)
-            printw("%d %s %d\n", tf->pf[i].pid,
-                getpwuid(tf->pf[i].uid)->pw_name, tf->pf[i].pr);
+            printw("%d %s %d %d %lld\n", tf->pf[i].pid,
+                getpwuid(tf->pf[i].uid)->pw_name, tf->pf[i].pr, tf->pf[i].ni,
+                tf->pf[i].virt);
     }
 }
 

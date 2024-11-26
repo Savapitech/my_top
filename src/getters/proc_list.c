@@ -28,6 +28,7 @@ const getters_t STATUS_GETTERS[] = {
 const getters_t STAT_GETTERS[] = {
     { &get_virt },
     { &get_pr },
+    { &get_ni },
     { NULL }
 };
 
@@ -35,19 +36,17 @@ static
 int fill_with_stat(tf_t *tf, char *pid, int i)
 {
     char *file = malloc(strlen(pid) + 12);
-    char *line;
+    char line[400];
     FILE *fp;
-    size_t len = 0;
 
     sprintf(file, "/proc/%s/stat", pid);
     fp = fopen(file, "r");
     if (!fp)
         return TOP_FAILURE;
-    if (!getline(&line, &len, fp))
+    if (!fgets(line, 400, fp))
         return TOP_FAILURE;
     for (int ii = 0; STAT_GETTERS[ii].ptr; ii++)
         STAT_GETTERS[ii].ptr(tf, i, line);
-    printw("%s ", line);
     if (file)
         free(file);
     fclose(fp);
