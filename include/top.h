@@ -11,6 +11,7 @@
     #define TOP_SUCCESS 0
     #define TOP_FAILURE 84
     #define ARRAY_SIZE(array) ((sizeof array) / (sizeof array[0]))
+    #include <ncurses.h>
 
 typedef struct {
     char *str;
@@ -38,20 +39,23 @@ typedef struct {
 } processes_t;
 
 typedef struct {
-    float pid;
+    unsigned int pid;
     int uid;
+    int gid;
     int pr;
     int ni;
     float virt;
     float res;
     float shr;
-    int s;
+    char state;
     int cpu;
     int mem;
     int time;
     char *cmd;
 
 } proc_info_t;
+
+typedef struct getters_s getters_t;
 
 typedef struct {
     int ac;
@@ -63,6 +67,10 @@ typedef struct {
     proc_info_t *pf;
     char *lines[20];
 } tf_t;
+
+struct getters_s {
+    int (*ptr)(tf_t *tf, int i, char *);
+};
 
 //utils
 int stridx(char const *, char);
@@ -79,4 +87,8 @@ int get_uptime(tf_t *);
 void print_uptime(tf_t *);
 void print_time(void);
 int get_proc_list(tf_t *);
+
+// get
+int get_name(tf_t *, int, char *);
+int get_pid(tf_t *, int, char *);
 #endif /* TOP_H */

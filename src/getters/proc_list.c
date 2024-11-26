@@ -6,6 +6,7 @@
 */
 
 #include "top.h"
+#include <ctype.h>
 #include <dirent.h>
 #include <fcntl.h>
 #include <ncurses.h>
@@ -15,24 +16,29 @@
 #include <string.h>
 #include <unistd.h>
 
+const getters_t GETTERS[] = {
+    { &get_name },
+    { &get_pid },
+    { NULL }
+};
+
 static
 int fill_proc_info(tf_t *tf, char *pid, int i)
 {
-    int fd;
-    char *file = malloc(strlen(pid) + 12);
-    char buffer[10240];
+    FILE *fp;
+    char *file = malloc(strlen(pid) + 14);
+    char line[100];
 
-    sprintf(file, "/proc/%s/stat", pid);
-    fd = open(file, O_RDONLY);
-    if (fd != -1) {
-        read(fd, buffer, 10240);
-        strtok(buffer, " ");
-        tf->pf[i].pid = atof(pid);
-        tf->pf[i].cmd = strdup(strtok(NULL, " ") + 1);
-        tf->pf[i].cmd[strlen(tf->pf[i].cmd) - 1] = '\0';
-        close(fd);
+    sprintf(file, "/proc/%s/status", pid);
+    fp = fopen(file, "r");
+    if (!fp)
+        return TOP_FAILURE;
+    while (fgets(line, 100, fp)) {
+        for (int i = 0; GETTERS[i].ptr; i++)
+            GETTERS[i].ptr(tf, i, line);
     }
-    free(file);
+    printw("%s %d", tf->pf[i].cmd, tf->pf[i].pid);
+    fclose(fp);
     return TOP_SUCCESS;
 }
 
@@ -70,6 +76,5 @@ int get_proc_list(tf_t *tf)
             fill_proc_info(tf, sd->d_name, i);
     }
     closedir(dir);
-    printw("pid %s\n", tf->pf[i].cmd);
     return TOP_SUCCESS;
 }

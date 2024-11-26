@@ -26,7 +26,7 @@ CC := gcc
 
 CFLAGS += -Wall -Wextra -g3
 CFLAGS += -iquote ./include
-CFLAGS += -Wno-unused-parameter -fsanitize=address
+CFLAGS += -Wno-unused-parameter
 
 oui: $(NAME)
 
