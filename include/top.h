@@ -10,8 +10,10 @@
     #define TOP_H
     #define TOP_SUCCESS 0
     #define TOP_FAILURE 84
+    #define BLACK_ON_WHITE 1
     #define ARRAY_SIZE(array) ((sizeof array) / (sizeof array[0]))
     #include <ncurses.h>
+    #include <sys/ioctl.h>
 
 typedef struct {
     char *str;
@@ -44,15 +46,14 @@ typedef struct {
     int gid;
     int pr;
     int ni;
-    float virt;
-    float res;
-    float shr;
+    long long virt;
+    long long res;
+    long long shr;
     char state;
     int cpu;
     int mem;
     int time;
     char *cmd;
-
 } proc_info_t;
 
 typedef struct getters_s getters_t;
@@ -66,10 +67,11 @@ typedef struct {
     processes_t processes;
     proc_info_t *pf;
     char *lines[20];
+    struct winsize *winsize;
 } tf_t;
 
 struct getters_s {
-    int (*ptr)(tf_t *tf, int i, char *);
+    int (*ptr)(tf_t *, int, char *);
 };
 
 //utils
@@ -91,4 +93,9 @@ int get_proc_list(tf_t *);
 // get
 int get_name(tf_t *, int, char *);
 int get_pid(tf_t *, int, char *);
+int get_state(tf_t *, int, char *);
+int get_uid(tf_t *, int, char *);
+int get_gid(tf_t *, int, char *);
+int get_virt(tf_t *, int, char *);
+int get_pr(tf_t *, int, char *);
 #endif /* TOP_H */
