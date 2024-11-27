@@ -10,17 +10,23 @@
 #include <pwd.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
+#include <time.h>
 #include <unistd.h>
 
 static
 void print_procs(tf_t *tf)
 {
+    double proc_time;
+
     for (int i = 0; i < tf->processes.total && i < tf->winsize->ws_row - 4;
         i++) {
-        if (tf->pf[i].pid)
-            printw("%d %s %d %d %lld\n", tf->pf[i].pid,
+        if (tf->pf[i].pid) {
+            proc_time = tf->uptime - (double)tf->pf[i].time /
+                sysconf(_SC_CLK_TCK);
+            printw("%d %s %d %d %lld                   %f %s\n", tf->pf[i].pid,
                 getpwuid(tf->pf[i].uid)->pw_name, tf->pf[i].pr, tf->pf[i].ni,
-                tf->pf[i].virt);
+                tf->pf[i].virt, proc_time, tf->pf[i].cmd);
+        }
     }
 }
 

@@ -6,7 +6,6 @@
 */
 
 #include "top.h"
-#include <ctype.h>
 #include <dirent.h>
 #include <fcntl.h>
 #include <ncurses.h>
@@ -29,6 +28,7 @@ const getters_t STAT_GETTERS[] = {
     { &get_virt },
     { &get_pr },
     { &get_ni },
+    { &get_time },
     { NULL }
 };
 
