@@ -23,9 +23,9 @@ void print_procs(tf_t *tf)
         if (tf->pf[i].pid) {
             proc_time = tf->uptime - (double)tf->pf[i].time /
                 sysconf(_SC_CLK_TCK);
-            printw("%d %s %d %d %lld                   %f %s\n", tf->pf[i].pid,
+            printw("%d %s %d %d %lld              %c   %f %s\n", tf->pf[i].pid,
                 getpwuid(tf->pf[i].uid)->pw_name, tf->pf[i].pr, tf->pf[i].ni,
-                tf->pf[i].virt, proc_time, tf->pf[i].cmd);
+                tf->pf[i].virt, tf->pf[i].state, proc_time, tf->pf[i].cmd);
         }
     }
 }
