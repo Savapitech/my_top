@@ -26,6 +26,7 @@ const getters_t STATUS_GETTERS[] = {
 
 const getters_t STAT_GETTERS[] = {
     { &get_virt },
+    { &get_res },
     { &get_pr },
     { &get_ni },
     { &get_time },
@@ -67,6 +68,8 @@ int fill_proc_info(tf_t *tf, char *pid, int i)
     while (fgets(line, 100, fp))
         for (int ii = 0; STATUS_GETTERS[ii].ptr; ii++)
             STATUS_GETTERS[ii].ptr(tf, i, line);
+    tf->pf_len.pid = (int)strlen(pid) > tf->pf_len.pid ?
+        strlen(pid) : tf->pf_len.pid;
     fill_with_stat(tf, pid, i);
     fclose(fp);
     if (file)
@@ -98,6 +101,7 @@ int get_proc_list(tf_t *tf)
 
     if (dir == NULL)
         return TOP_FAILURE;
+    tf->processes = (processes_t){ 0 };
     tf->processes.total = get_proc_nbr();
     if (!tf->processes.total)
         exit((fprintf(stderr, "top: Invalid proc number\n"), TOP_FAILURE));

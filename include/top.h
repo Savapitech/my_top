@@ -41,6 +41,21 @@ typedef struct {
 } processes_t;
 
 typedef struct {
+    int pid;
+    int uid;
+    int gid;
+    int pr;
+    int ni;
+    int virt;
+    int res;
+    int shr;
+    int cpu;
+    int mem;
+    int time;
+    int cmd;
+} proc_info_len_t;
+
+typedef struct {
     unsigned int pid;
     int uid;
     int gid;
@@ -66,7 +81,7 @@ typedef struct {
     double uptime;
     processes_t processes;
     proc_info_t *pf;
-    char *lines[20];
+    proc_info_len_t pf_len;
     struct winsize *winsize;
 } tf_t;
 
@@ -77,13 +92,14 @@ struct getters_s {
 //utils
 int stridx(char const *, char);
 int strisdigits(char *);
+int floatlen(float, int);
+int intlen(long long);
 
 //core
 int top(int, char **);
 int parser(tf_t *);
 void print_usage(void);
 int get_load_avg(tf_t *);
-int read_file(tf_t *, char *);
 int init_ncurses(tf_t *);
 int get_uptime(tf_t *);
 void print_uptime(tf_t *);
@@ -97,6 +113,7 @@ int get_state(tf_t *, int, char *);
 int get_uid(tf_t *, int, char *);
 int get_gid(tf_t *, int, char *);
 int get_virt(tf_t *, int, char *);
+int get_res(tf_t *, int, char *);
 int get_pr(tf_t *, int, char *);
 int get_ni(tf_t *, int, char *);
 int get_time(tf_t *, int, char *);
