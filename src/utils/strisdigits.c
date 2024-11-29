@@ -7,6 +7,7 @@
 
 #include <ctype.h>
 
+__attribute__((const))
 int strisdigits(char *str)
 {
     for (char *p = str; *p != '\0'; p++)

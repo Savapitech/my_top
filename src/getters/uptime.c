@@ -14,7 +14,8 @@ int get_uptime(tf_t *tf)
     FILE *fp;
 
     fp = fopen("/proc/uptime", "r");
-    fscanf(fp, "%lf", &tf->uptime);
+    if (!fscanf(fp, "%lf", &tf->uptime))
+        return (fclose(fp), TOP_FAILURE);
     fclose(fp);
     return TOP_SUCCESS;
 }

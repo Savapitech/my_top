@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 
+__attribute__((const))
 int stridx(char const *str, char c)
 {
     int i = 0;

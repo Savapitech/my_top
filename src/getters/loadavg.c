@@ -14,8 +14,9 @@ int get_load_avg(tf_t *tf)
     FILE *fp;
 
     fp = fopen("/proc/loadavg", "r");
-    fscanf(fp, "%f %f %f", &tf->lavg.one_m, &tf->lavg.five_m,
-        &tf->lavg.fifteen_m);
+    if (!fscanf(fp, "%f %f %f", &tf->lavg.one_m, &tf->lavg.five_m,
+        &tf->lavg.fifteen_m))
+        return (fclose(fp), TOP_FAILURE);
     fclose(fp);
     return TOP_SUCCESS;
 }

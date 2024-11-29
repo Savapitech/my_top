@@ -24,7 +24,7 @@ int get_name(tf_t *tf, int i, char *line)
     p[strlen(p) - 1] = '\0';
     tf->pf[i].cmd = strdup(p);
     tf->pf_len.cmd = (int)strlen(tf->pf[i].cmd) > tf->pf_len.cmd ?
-        strlen(tf->pf[i].cmd) : tf->pf_len.cmd;
+        strlen(tf->pf[i].cmd) : (size_t)tf->pf_len.cmd;
     return TOP_SUCCESS;
 }
 
@@ -87,7 +87,7 @@ int get_uid(tf_t *tf, int i, char *line)
     tf->pf[i].uid = atoi(p);
     tf->pf_len.uid = (int)strlen(getpwuid(tf->pf[i].uid)->pw_name) >
         tf->pf_len.uid ? strlen(getpwuid(tf->pf[i].uid)->pw_name) :
-        tf->pf_len.uid;
+        (size_t)tf->pf_len.uid;
     return TOP_SUCCESS;
 }
 
@@ -103,6 +103,6 @@ int get_gid(tf_t *tf, int i, char *line)
     tf->pf[i].gid = atoi(p);
     tf->pf_len.gid = (int)strlen(getgrgid(tf->pf[i].gid)->gr_name) >
         tf->pf_len.gid ? strlen(getgrgid(tf->pf[i].gid)->gr_name) :
-        tf->pf_len.gid;
+        (size_t)tf->pf_len.gid;
     return TOP_SUCCESS;
 }

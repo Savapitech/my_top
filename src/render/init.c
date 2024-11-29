@@ -17,7 +17,7 @@ void print_procs(tf_t *tf)
 {
     double proc_time;
 
-    for (int i = 0; i < tf->processes.total && i < tf->winsize->ws_row - 4;
+    for (int i = 0; i < tf->processes.total && i < tf->winsize->ws_row - 5;
         i++) {
         if (tf->pf[i].pid) {
             proc_time = tf->uptime - (double)tf->pf[i].time /
@@ -60,10 +60,32 @@ void printer(tf_t *tf)
     print_uptime(tf);
     printw(" load average: %.2f, %.2f, %.2f\n", tf->lavg.one_m,
         tf->lavg.five_m, tf->lavg.fifteen_m);
-    printw("Tasks: %d total, %d running, %d sleeping, %d stopped, %d zombie",
+    printw("Tasks: %d total, %d running, %d sleeping, %d stopped, %d zombie\n",
         tf->processes.total, tf->processes.running, tf->processes.sleeping,
         tf->processes.stopped, tf->processes.zombie);
+    printw("%%Cpu(s): %.1f us, %.1f sy, %.1f ni, %.1f id, %.1f wa, %.1f hi,",
+        tf->cpuf_percentages[0], tf->cpuf_percentages[2],
+        tf->cpuf_percentages[1], tf->cpuf_percentages[3],
+        tf->cpuf_percentages[4], tf->cpuf_percentages[5]);
+    printw(" %.1f si, %.1f st", tf->cpuf_percentages[6],
+            tf->cpuf_percentages[7]);
     print_proc_header(tf);
+}
+
+void init_loop(tf_t *tf)
+{
+        clear();
+        ioctl(STDOUT_FILENO, TIOCGWINSZ, tf->winsize);
+        get_cpu_infos(&tf->cpuf_prev);
+        printer(tf);
+        print_procs(tf);
+        refresh();
+        sleep(1);
+        get_cpu_infos(&tf->cpuf_curr);
+        calculate_cpu_usage(&tf->cpuf_prev, &tf->cpuf_curr,
+            tf->cpuf_percentages);
+        if (tf->pf)
+            free(tf->pf);
 }
 
 int init_ncurses(tf_t *tf)
@@ -76,16 +98,8 @@ int init_ncurses(tf_t *tf)
     curs_set(0);
     init_pair(BLACK_ON_WHITE, COLOR_BLACK, COLOR_WHITE);
     tf->winsize = &winsize;
-    while (1) {
-        clear();
-        ioctl(STDOUT_FILENO, TIOCGWINSZ, tf->winsize);
-        printer(tf);
-        print_procs(tf);
-        refresh();
-        sleep(1);
-        if (tf->pf)
-            free(tf->pf);
-    }
+    while (1)
+        init_loop(tf);
     endwin();
     return TOP_SUCCESS;
 }

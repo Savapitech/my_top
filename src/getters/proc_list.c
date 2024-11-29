@@ -69,7 +69,7 @@ int fill_proc_info(tf_t *tf, char *pid, int i)
         for (int ii = 0; STATUS_GETTERS[ii].ptr; ii++)
             STATUS_GETTERS[ii].ptr(tf, i, line);
     tf->pf_len.pid = (int)strlen(pid) > tf->pf_len.pid ?
-        strlen(pid) : tf->pf_len.pid;
+        strlen(pid) : (size_t)tf->pf_len.pid;
     fill_with_stat(tf, pid, i);
     fclose(fp);
     if (file)

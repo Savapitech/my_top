@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 
+__attribute__((const))
 int floatlen(float value, int precision)
 {
     char buffer[100];
@@ -17,6 +18,7 @@ int floatlen(float value, int precision)
     return (int)strlen(buffer);
 }
 
+__attribute__((const))
 int intlen(long long value)
 {
     int length = (value < 0) ? 1 : 0;

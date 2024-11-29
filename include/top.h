@@ -41,6 +41,17 @@ typedef struct {
 } processes_t;
 
 typedef struct {
+    unsigned long long user;
+    unsigned long long nice;
+    unsigned long long system;
+    unsigned long long idle;
+    unsigned long long iowait;
+    unsigned long long irq;
+    unsigned long long softirq;
+    unsigned long long steal;
+} cpu_infos_t;
+
+typedef struct {
     int pid;
     int uid;
     int gid;
@@ -82,6 +93,9 @@ typedef struct {
     processes_t processes;
     proc_info_t *pf;
     proc_info_len_t pf_len;
+    cpu_infos_t cpuf_prev;
+    cpu_infos_t cpuf_curr;
+    double cpuf_percentages[8];
     struct winsize *winsize;
 } tf_t;
 
@@ -117,4 +131,6 @@ int get_res(tf_t *, int, char *);
 int get_pr(tf_t *, int, char *);
 int get_ni(tf_t *, int, char *);
 int get_time(tf_t *, int, char *);
+int get_cpu_infos(cpu_infos_t *);
+int calculate_cpu_usage(cpu_infos_t *, cpu_infos_t *, double *);
 #endif /* TOP_H */
