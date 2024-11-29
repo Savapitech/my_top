@@ -8,6 +8,7 @@
 
 #ifndef TOP_H
     #define TOP_H
+    #define DEBUG 0
     #define TOP_SUCCESS 0
     #define TOP_FAILURE 84
     #define BLACK_ON_WHITE 1
