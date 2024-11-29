@@ -8,6 +8,7 @@
 # IDE
 .idea
 .vscode
+valout
 
 # Bin
 a.out
@@ -38,6 +39,3 @@ unit_tests
 
 # Python (CI)
 *.pyc
-
-#tkt
-tests/tester_3000.c
