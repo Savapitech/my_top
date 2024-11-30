@@ -17,7 +17,7 @@ void print_procs(tf_t *tf)
 {
     double proc_time;
 
-    for (int i = 0; i < tf->processes.total && i < tf->winsize->ws_row - 5;
+    for (int i = 0; i < tf->processes.total && i < tf->winsize->ws_row - 7;
         i++) {
         if (tf->pf[i].pid) {
             proc_time = tf->uptime - (double)tf->pf[i].time /
@@ -51,6 +51,17 @@ void print_proc_header(tf_t *tf)
 }
 
 static
+void print_mem_header(tf_t *tf)
+{
+    printw("MiB Mem : %.1f total, %.1f free, %.1f used, %.1f buff/cache\n",
+        tf->mem_infos.mem_total_mib, tf->mem_infos.mem_free_mib,
+        tf->mem_infos.mem_used_mib, tf->mem_infos.buff_cache_mib);
+    printw("MiB Swap: %.1f total, %.1f free, %.1f used. %.1f avail Mem",
+        tf->mem_infos.swap_total_mib, tf->mem_infos.swap_free_mib,
+        tf->mem_infos.swap_used_mib, tf->mem_infos.mem_available_mib);
+}
+
+static
 void printer(tf_t *tf)
 {
     get_load_avg(tf);
@@ -67,8 +78,9 @@ void printer(tf_t *tf)
         tf->cpuf_percentages[0], tf->cpuf_percentages[2],
         tf->cpuf_percentages[1], tf->cpuf_percentages[3],
         tf->cpuf_percentages[4], tf->cpuf_percentages[5]);
-    printw(" %.1f si, %.1f st", tf->cpuf_percentages[6],
+    printw(" %.1f si, %.1f st\n", tf->cpuf_percentages[6],
             tf->cpuf_percentages[7]);
+    print_mem_header(tf);
     print_proc_header(tf);
 }
 
@@ -76,6 +88,7 @@ void init_loop(tf_t *tf)
 {
         clear();
         ioctl(STDOUT_FILENO, TIOCGWINSZ, tf->winsize);
+        get_memory_infos(tf);
         get_cpu_infos(&tf->cpuf_prev);
         printer(tf);
         print_procs(tf);
