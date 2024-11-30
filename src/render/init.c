@@ -69,8 +69,9 @@ void printer(tf_t *tf)
     get_proc_list(tf);
     print_time();
     print_uptime(tf);
-    printw(" load average: %.2f, %.2f, %.2f\n", tf->lavg.one_m,
-        tf->lavg.five_m, tf->lavg.fifteen_m);
+    printw(" %d user, load average: %.2f, %.2f, %.2f\n",
+        get_logged_in_users(), tf->lavg.one_m, tf->lavg.five_m,
+        tf->lavg.fifteen_m);
     printw("Tasks: %d total, %d running, %d sleeping, %d stopped, %d zombie\n",
         tf->processes.total, tf->processes.running, tf->processes.sleeping,
         tf->processes.stopped, tf->processes.zombie);
