@@ -53,6 +53,17 @@ typedef struct {
 } cpu_infos_t;
 
 typedef struct {
+    double mem_total_mib;
+    double mem_free_mib;
+    double mem_used_mib;
+    double buff_cache_mib;
+    double mem_available_mib;
+    double swap_total_mib;
+    double swap_free_mib;
+    double swap_used_mib;
+} mem_infos_t;
+
+typedef struct {
     int pid;
     int uid;
     int gid;
@@ -96,6 +107,7 @@ typedef struct {
     proc_info_len_t pf_len;
     cpu_infos_t cpuf_prev;
     cpu_infos_t cpuf_curr;
+    mem_infos_t mem_infos;
     double cpuf_percentages[8];
     struct winsize *winsize;
 } tf_t;
@@ -134,4 +146,5 @@ int get_ni(tf_t *, int, char *);
 int get_time(tf_t *, int, char *);
 int get_cpu_infos(cpu_infos_t *);
 int calculate_cpu_usage(cpu_infos_t *, cpu_infos_t *, double *);
+void get_memory_infos(tf_t *);
 #endif /* TOP_H */

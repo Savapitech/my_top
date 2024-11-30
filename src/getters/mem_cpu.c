@@ -47,3 +47,46 @@ int calculate_cpu_usage(cpu_infos_t *prev, cpu_infos_t *curr,
     percentages[7] = 100.0 * (double)(curr->steal - prev->steal) / tot_dif;
     return TOP_SUCCESS;
 }
+
+static
+unsigned long long get_meminfo_value(const char *key)
+{
+    FILE *file = fopen("/proc/meminfo", "r");
+    char buffer[256];
+    unsigned long long value = 0;
+
+    if (!file)
+        return (perror("fopen"),
+            TOP_FAILURE);
+    while (fgets(buffer, sizeof(buffer), file)) {
+        if (strncmp(buffer, key, strlen(key)) == 0) {
+            sscanf(buffer + strlen(key), " %llu kB", &value);
+            break;
+        }
+    }
+    fclose(file);
+    return value;
+}
+
+void get_memory_infos(tf_t *tf)
+{
+    unsigned long long mem_total = get_meminfo_value("MemTotal:");
+    unsigned long long mem_free = get_meminfo_value("MemFree:");
+    unsigned long long buffers = get_meminfo_value("Buffers:");
+    unsigned long long cached = get_meminfo_value("Cached:");
+    unsigned long long mem_available = get_meminfo_value("MemAvailable:");
+    unsigned long long swap_total = get_meminfo_value("SwapTotal:");
+    unsigned long long swap_free = get_meminfo_value("SwapFree:");
+    unsigned long long mem_used = mem_total - mem_free - buffers - cached;
+    unsigned long long buff_cache = buffers + cached;
+    unsigned long long swap_used = swap_total - swap_free;
+
+    tf->mem_infos.mem_total_mib = mem_total / 1024.0;
+    tf->mem_infos.mem_free_mib = mem_free / 1024.0;
+    tf->mem_infos.mem_used_mib = mem_used / 1024.0;
+    tf->mem_infos.buff_cache_mib = buff_cache / 1024.0;
+    tf->mem_infos.mem_available_mib = mem_available / 1024.0;
+    tf->mem_infos.swap_total_mib = swap_total / 1024.0;
+    tf->mem_infos.swap_free_mib = swap_free / 1024.0;
+    tf->mem_infos.swap_used_mib = swap_used / 1024.0;
+}
