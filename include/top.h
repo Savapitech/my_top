@@ -97,9 +97,15 @@ typedef struct {
 typedef struct getters_s getters_t;
 
 typedef struct {
+    // main
     int ac;
     char **av;
     flags_t flags;
+    // win
+    int opened;
+    struct winsize *winsize;
+    int min_displayed_i;
+    // getters
     lavg_t lavg;
     double uptime;
     processes_t processes;
@@ -109,7 +115,6 @@ typedef struct {
     cpu_infos_t cpuf_curr;
     mem_infos_t mem_infos;
     double cpuf_percentages[8];
-    struct winsize *winsize;
 } tf_t;
 
 struct getters_s {

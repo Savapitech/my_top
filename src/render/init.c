@@ -16,9 +16,10 @@ static
 void print_procs(tf_t *tf)
 {
     double proc_time;
+    int displayed_i = 0;
 
-    for (int i = 0; i < tf->processes.total && i < tf->winsize->ws_row - 7;
-        i++) {
+    for (int i = tf->min_displayed_i; i < tf->processes.total &&
+        displayed_i < tf->winsize->ws_row - 7; i++) {
         if (tf->pf[i].pid) {
             proc_time = tf->uptime - (double)tf->pf[i].time /
                 sysconf(_SC_CLK_TCK);
@@ -28,6 +29,7 @@ void print_procs(tf_t *tf)
                 tf->pf_len.ni, tf->pf[i].ni, tf->pf_len.virt, tf->pf[i].virt,
                 tf->pf_len.res, tf->pf[i].res, tf->pf[i].state, proc_time,
                 tf->pf[i].cmd);
+            displayed_i++;
         }
     }
 }
@@ -85,21 +87,35 @@ void printer(tf_t *tf)
     print_proc_header(tf);
 }
 
+static
+void handle_ch(tf_t *tf, int ch)
+{
+    if (ch == KEY_DOWN && tf->min_displayed_i < tf->processes.total)
+        tf->min_displayed_i++;
+    if (ch == KEY_UP && tf->min_displayed_i > 0)
+        tf->min_displayed_i--;
+}
+
+static
 void init_loop(tf_t *tf)
 {
-        clear();
-        ioctl(STDOUT_FILENO, TIOCGWINSZ, tf->winsize);
-        get_memory_infos(tf);
-        get_cpu_infos(&tf->cpuf_prev);
-        printer(tf);
-        print_procs(tf);
-        refresh();
-        sleep(1);
-        get_cpu_infos(&tf->cpuf_curr);
-        calculate_cpu_usage(&tf->cpuf_prev, &tf->cpuf_curr,
-            tf->cpuf_percentages);
-        if (tf->pf)
-            free(tf->pf);
+    int ch;
+
+    clear();
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, tf->winsize);
+    get_memory_infos(tf);
+    get_cpu_infos(&tf->cpuf_prev);
+    printer(tf);
+    print_procs(tf);
+    refresh();
+    get_cpu_infos(&tf->cpuf_curr);
+    calculate_cpu_usage(&tf->cpuf_prev, &tf->cpuf_curr,
+        tf->cpuf_percentages);
+    if (tf->pf)
+        free(tf->pf);
+    ch = getch();
+    if (ch)
+        handle_ch(tf, ch);
 }
 
 int init_ncurses(tf_t *tf)
@@ -111,8 +127,10 @@ int init_ncurses(tf_t *tf)
     use_default_colors();
     curs_set(0);
     init_pair(BLACK_ON_WHITE, COLOR_BLACK, COLOR_WHITE);
+    keypad(stdscr, TRUE);
+    timeout(1000);
     tf->winsize = &winsize;
-    while (1)
+    while (tf->opened)
         init_loop(tf);
     endwin();
     return TOP_SUCCESS;
