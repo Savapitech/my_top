@@ -71,11 +71,12 @@ void get_memory_infos(tf_t *tf)
     unsigned long long mem_total = get_meminfo_value("MemTotal:");
     unsigned long long mem_free = get_meminfo_value("MemFree:");
     unsigned long long buffers = get_meminfo_value("Buffers:");
-    unsigned long long cached = get_meminfo_value("Cached:");
+    unsigned long long shrec = get_meminfo_value("SReclaimable:");
+    unsigned long long cached = shrec + get_meminfo_value("Cached:");
     unsigned long long mem_available = get_meminfo_value("MemAvailable:");
     unsigned long long swap_total = get_meminfo_value("SwapTotal:");
     unsigned long long swap_free = get_meminfo_value("SwapFree:");
-    unsigned long long mem_used = mem_total - mem_free - buffers - cached;
+    unsigned long long mem_used = mem_total - mem_free - (buffers + cached);
     unsigned long long buff_cache = buffers + cached;
     unsigned long long swap_used = swap_total - swap_free;
 
