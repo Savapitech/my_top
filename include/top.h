@@ -64,6 +64,13 @@ typedef struct {
 } mem_infos_t;
 
 typedef struct {
+    double sec;
+    int int_sec;
+    int min;
+    int cent;
+} top_time_t;
+
+typedef struct {
     int pid;
     int uid;
     int gid;
@@ -90,7 +97,7 @@ typedef struct {
     char state;
     int cpu;
     int mem;
-    long long time;
+    top_time_t time;
     char *cmd;
 } proc_info_t;
 
@@ -101,6 +108,7 @@ typedef struct {
     int ac;
     char **av;
     flags_t flags;
+    bool reverse_sort;
     // win
     int opened;
     struct winsize *winsize;
@@ -126,6 +134,8 @@ int stridx(char const *, char);
 int strisdigits(char *);
 int floatlen(float, int);
 int intlen(long long);
+int compare_pid(const void *, const void *);
+int compare_reverse_pid(const void *, const void *);
 
 //core
 int top(int, char **);
@@ -152,5 +162,4 @@ int get_time(tf_t *, int, char *);
 int get_cpu_infos(cpu_infos_t *);
 int calculate_cpu_usage(cpu_infos_t *, cpu_infos_t *, double *);
 void get_memory_infos(tf_t *);
-int get_logged_in_users(void);
 #endif /* TOP_H */
