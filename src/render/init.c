@@ -20,7 +20,7 @@ void print_procs(tf_t *tf)
     for (int i = tf->min_displayed_i; i < tf->processes.total &&
         displayed_i < tf->winsize->ws_row - 7; i++) {
         if (tf->pf[i].pid) {
-            printw("%*d %*s %*d %*d %*lld %*lld %6c %1c %21c%d:%02d.%02d %s\n",
+            printw("%*d %-*s %*d %*d %*lld %*lld %7c%1c %21c%d:%02d.%02d %s\n",
                 tf->pf_len.pid, tf->pf[i].pid, tf->pf_len.uid,
                 getpwuid(tf->pf[i].uid)->pw_name, tf->pf_len.pr, tf->pf[i].pr,
                 tf->pf_len.ni, tf->pf[i].ni, tf->pf_len.virt, tf->pf[i].virt,
@@ -36,7 +36,7 @@ static
 void print_proc_header(tf_t *tf)
 {
     attron(COLOR_PAIR(BLACK_ON_WHITE));
-    printw("\n\n%*sPID %*sUSER %*sPR %*sNI %*sVIRT %*sRES %*sSHR S %*s%%CPU ",
+    printw("\n\n%*sPID USER%*s %*sPR %*sNI %*sVIRT %*sRES %*sSHR S %*s%%CPU ",
             tf->pf_len.pid - 3, "", tf->pf_len.uid - 4, "", tf->pf_len.pr - 2,
             "", tf->pf_len.ni - 2, "", tf->pf_len.virt - 4, "",
             tf->pf_len.res - 3, "", tf->pf_len.shr - 3, "", tf->pf_len.cpu - 4,
