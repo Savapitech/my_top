@@ -130,7 +130,7 @@ int init_ncurses(tf_t *tf)
     curs_set(0);
     init_pair(BLACK_ON_WHITE, COLOR_BLACK, COLOR_WHITE);
     keypad(stdscr, TRUE);
-    timeout(900);
+    timeout(950);
     tf->winsize = &winsize;
     while (tf->opened)
         init_loop(tf);
