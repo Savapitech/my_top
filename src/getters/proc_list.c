@@ -106,12 +106,10 @@ int get_proc_list(tf_t *tf)
     if (!tf->processes.total)
         exit((fprintf(stderr, "top: Invalid proc number\n"), TOP_FAILURE));
     tf->pf = malloc(sizeof(proc_info_t) * tf->processes.total);
-    for (sd = readdir(dir); sd != NULL; sd = readdir(dir)) {
-        if (strisdigits(sd->d_name)) {
-            fill_proc_info(tf, sd->d_name, i);
-            i++;
-        }
-    }
+    for (sd = readdir(dir); sd != NULL; sd = readdir(dir))
+        if (strisdigits(sd->d_name))
+            (fill_proc_info(tf, sd->d_name, i), i++);
     closedir(dir);
+    qsort(tf->pf, tf->processes.total, sizeof(proc_info_t), &compare_pid);
     return TOP_SUCCESS;
 }

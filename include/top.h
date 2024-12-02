@@ -126,6 +126,7 @@ int stridx(char const *, char);
 int strisdigits(char *);
 int floatlen(float, int);
 int intlen(long long);
+int compare_pid(const void *, const void *);
 
 //core
 int top(int, char **);
