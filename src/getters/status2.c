@@ -13,14 +13,7 @@
 
 int get_pr(tf_t *tf, int i, char *line)
 {
-    char line2[400];
-    char *p;
-
-    strcpy(line2, line);
-    p = strtok(line2, " ");
-    for (int ii = 0; ii < 17; ii++)
-        p = strtok(NULL, " ");
-    tf->pf[i].pr = atoi(p);
+    tf->pf[i].pr = atoi(get_value_tok(line, 17));
     tf->pf_len.pr = intlen(tf->pf[i].pr) > tf->pf_len.pr ?
         intlen(tf->pf[i].pr) : tf->pf_len.pr;
     return TOP_SUCCESS;
@@ -28,14 +21,7 @@ int get_pr(tf_t *tf, int i, char *line)
 
 int get_ni(tf_t *tf, int i, char *line)
 {
-    char line2[400];
-    char *p;
-
-    strcpy(line2, line);
-    p = strtok(line2, " ");
-    for (int ii = 0; ii < 18; ii++)
-        p = strtok(NULL, " ");
-    tf->pf[i].ni = atoi(p);
+    tf->pf[i].ni = atoi(get_value_tok(line, 18));
     tf->pf_len.ni = intlen(tf->pf[i].ni) > tf->pf_len.ni ?
         intlen(tf->pf[i].ni) : tf->pf_len.ni;
     return TOP_SUCCESS;

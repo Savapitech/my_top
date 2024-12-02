@@ -7,21 +7,20 @@
 
 #include "top.h"
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 int get_time(tf_t *tf, int i, char *line)
 {
-    char line2[400];
-    char *p;
-
-    strcpy(line2, line);
-    p = strtok(line2, " ");
-    for (int ii = 0; ii < 21; ii++)
-        p = strtok(NULL, " ");
-    tf->pf[i].time.sec = tf->uptime - (double)atoll(p) / sysconf(_SC_CLK_TCK);
+    tf->pf[i].time.sec = tf->uptime - (double)atoll(get_value_tok(line, 21)) /
+        sysconf(_SC_CLK_TCK);
     tf->pf[i].time.min = tf->pf[i].time.sec / 60;
     tf->pf[i].time.int_sec = (int)tf->pf[i].time.sec % 60;
     tf->pf[i].time.cent = (int)(tf->pf[i].time.sec * 100) % 100;
+    tf->pf[i].time.utime = atol(get_value_tok(line, 13));
+    tf->pf[i].time.stime = atol(get_value_tok(line, 14));
+    tf->pf[i].cpu = 100 * ((tf->pf[i].time.utime + tf->pf[i].time.stime) /
+        (double)sysconf(_SC_CLK_TCK)) / tf->pf[i].time.sec;
+    tf->pf_len.cpu = floatlen(tf->pf[i].cpu, 3) > tf->pf_len.cpu ?
+        floatlen(tf->pf[i].cpu, 3) : tf->pf_len.cpu;
     return TOP_SUCCESS;
 }
