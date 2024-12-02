@@ -24,7 +24,7 @@ typedef struct {
 typedef struct {
     char *user;
     float delay;
-    int frames;
+    uint32_t frames;
 } flags_t;
 
 typedef struct {
@@ -68,6 +68,8 @@ typedef struct {
     int int_sec;
     int min;
     int cent;
+    uint64_t utime;
+    uint64_t stime;
 } top_time_t;
 
 typedef struct {
@@ -136,6 +138,7 @@ int floatlen(float, int);
 int intlen(long long);
 int compare_pid(const void *, const void *);
 int compare_reverse_pid(const void *, const void *);
+const void *get_value_tok(char *, int);
 
 //core
 int top(int, char **);

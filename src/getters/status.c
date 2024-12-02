@@ -12,6 +12,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+const void *get_value_tok(char *line, int skip)
+{
+    char buff[strlen(line) + 1];
+    void *p = NULL;
+
+    strcpy(buff, line);
+    p = strtok(buff, " ");
+    for (int ii = 0; ii < skip; ii++)
+        p = strtok(NULL, " ");
+    return p;
+}
+
 int get_name(tf_t *tf, int i, char *line)
 {
     char *p;

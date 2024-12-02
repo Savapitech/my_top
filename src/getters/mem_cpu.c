@@ -47,18 +47,18 @@ int calculate_cpu_usage(cpu_infos_t *prev, cpu_infos_t *curr,
 }
 
 static
-unsigned long long get_meminfo_value(const char *key)
+uint64_t get_meminfo_value(const char *key)
 {
     FILE *file = fopen("/proc/meminfo", "r");
     char buffer[256];
-    unsigned long long value = 0;
+    uint64_t value = 0;
 
     if (!file)
         return (perror("fopen"),
             TOP_FAILURE);
     while (fgets(buffer, sizeof(buffer), file)) {
         if (strncmp(buffer, key, strlen(key)) == 0) {
-            sscanf(buffer + strlen(key), " %llu kB", &value);
+            sscanf(buffer + strlen(key), " %lu kB", &value);
             break;
         }
     }
@@ -68,17 +68,17 @@ unsigned long long get_meminfo_value(const char *key)
 
 void get_memory_infos(tf_t *tf)
 {
-    unsigned long long mem_total = get_meminfo_value("MemTotal:");
-    unsigned long long mem_free = get_meminfo_value("MemFree:");
-    unsigned long long buffers = get_meminfo_value("Buffers:");
-    unsigned long long shrec = get_meminfo_value("SReclaimable:");
-    unsigned long long cached = shrec + get_meminfo_value("Cached:");
-    unsigned long long mem_available = get_meminfo_value("MemAvailable:");
-    unsigned long long swap_total = get_meminfo_value("SwapTotal:");
-    unsigned long long swap_free = get_meminfo_value("SwapFree:");
-    unsigned long long mem_used = mem_total - mem_free - (buffers + cached);
-    unsigned long long buff_cache = buffers + cached;
-    unsigned long long swap_used = swap_total - swap_free;
+    uint64_t mem_total = get_meminfo_value("MemTotal:");
+    uint64_t mem_free = get_meminfo_value("MemFree:");
+    uint64_t buffers = get_meminfo_value("Buffers:");
+    uint64_t shrec = get_meminfo_value("SReclaimable:");
+    uint64_t cached = shrec + get_meminfo_value("Cached:");
+    uint64_t mem_available = get_meminfo_value("MemAvailable:");
+    uint64_t swap_total = get_meminfo_value("SwapTotal:");
+    uint64_t swap_free = get_meminfo_value("SwapFree:");
+    uint64_t mem_used = mem_total - mem_free - (buffers + cached);
+    uint64_t buff_cache = buffers + cached;
+    uint64_t swap_used = swap_total - swap_free;
 
     tf->mem_infos.mem_total_mib = mem_total / 1024.0;
     tf->mem_infos.mem_free_mib = mem_free / 1024.0;
