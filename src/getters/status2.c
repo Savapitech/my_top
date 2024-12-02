@@ -48,8 +48,6 @@ int get_virt(tf_t *tf, int i, char *line)
 
     strcpy(line2, line);
     p = strtok(line2, " ");
-    for (int ii = 0; ii < 22; ii++)
-        p = strtok(NULL, " ");
     tf->pf[i].virt = atoll(p);
     tf->pf_len.virt = intlen(tf->pf[i].virt) > tf->pf_len.virt ?
         intlen(tf->pf[i].virt) : tf->pf_len.virt;
@@ -63,8 +61,7 @@ int get_res(tf_t *tf, int i, char *line)
 
     strcpy(line2, line);
     p = strtok(line2, " ");
-    for (int ii = 0; ii < 23; ii++)
-        p = strtok(NULL, " ");
+    p = strtok(NULL, " ");
     tf->pf[i].res = atoll(p);
     tf->pf_len.res = intlen(tf->pf[i].res) > tf->pf_len.res ?
         intlen(tf->pf[i].res) : tf->pf_len.res;

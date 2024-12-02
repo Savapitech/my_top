@@ -25,13 +25,38 @@ const getters_t STATUS_GETTERS[] = {
 };
 
 const getters_t STAT_GETTERS[] = {
-    { &get_virt },
-    { &get_res },
     { &get_pr },
     { &get_ni },
     { &get_time },
     { NULL }
 };
+
+const getters_t STATM_GETTERS[] = {
+    { &get_res },
+    { &get_virt },
+    { NULL }
+};
+
+static
+int fill_with_statm(tf_t *tf, char *pid, int i)
+{
+    char *file = malloc(strlen(pid) + 13);
+    char line[100];
+    FILE *fp;
+
+    sprintf(file, "/proc/%s/statm", pid);
+    fp = fopen(file, "r");
+    if (!fp)
+        return TOP_FAILURE;
+    if (!fgets(line, 100, fp))
+        return TOP_FAILURE;
+    for (int ii = 0; STATM_GETTERS[ii].ptr; ii++)
+        STATM_GETTERS[ii].ptr(tf, i, line);
+    if (file)
+        free(file);
+    fclose(fp);
+    return TOP_SUCCESS;
+}
 
 static
 int fill_with_stat(tf_t *tf, char *pid, int i)
@@ -51,6 +76,7 @@ int fill_with_stat(tf_t *tf, char *pid, int i)
     if (file)
         free(file);
     fclose(fp);
+    fill_with_statm(tf, pid, i);
     return TOP_SUCCESS;
 }
 
