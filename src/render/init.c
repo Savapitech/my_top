@@ -109,15 +109,15 @@ void init_loop(tf_t *tf)
     get_cpu_infos(&tf->cpuf_prev);
     printer(tf);
     print_procs(tf);
+    ch = getch();
+    if (ch)
+        handle_ch(tf, ch);
     refresh();
     get_cpu_infos(&tf->cpuf_curr);
     calculate_cpu_usage(&tf->cpuf_prev, &tf->cpuf_curr,
         tf->cpuf_percentages);
     if (tf->pf)
         free(tf->pf);
-    ch = getch();
-    if (ch)
-        handle_ch(tf, ch);
 }
 
 int init_ncurses(tf_t *tf)
