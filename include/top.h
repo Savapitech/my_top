@@ -97,8 +97,8 @@ typedef struct {
     long long res;
     long long shr;
     char state;
-    int cpu;
-    int mem;
+    double cpu;
+    double mem;
     top_time_t time;
     char *cmd;
 } proc_info_t;
