@@ -103,7 +103,8 @@ void init_loop(tf_t *tf)
     int ch;
 
     clear();
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, tf->winsize);
+    tf->winsize->ws_col = COLS;
+    tf->winsize->ws_row = LINES;
     get_memory_infos(tf);
     get_cpu_infos(&tf->cpuf_prev);
     printer(tf);
