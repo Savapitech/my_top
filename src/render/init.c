@@ -15,20 +15,18 @@
 static
 void print_procs(tf_t *tf)
 {
-    double proc_time;
     int displayed_i = 0;
 
     for (int i = tf->min_displayed_i; i < tf->processes.total &&
         displayed_i < tf->winsize->ws_row - 7; i++) {
         if (tf->pf[i].pid) {
-            proc_time = tf->uptime - (double)tf->pf[i].time /
-                sysconf(_SC_CLK_TCK);
-            printw("%*d %*s %*d %*d %*lld %*lld             %1c   %f %s\n",
+            printw("%*d %*s %*d %*d %*lld %*lld %6c %1c %21c%d:%02d.%02d %s\n",
                 tf->pf_len.pid, tf->pf[i].pid, tf->pf_len.uid,
                 getpwuid(tf->pf[i].uid)->pw_name, tf->pf_len.pr, tf->pf[i].pr,
                 tf->pf_len.ni, tf->pf[i].ni, tf->pf_len.virt, tf->pf[i].virt,
-                tf->pf_len.res, tf->pf[i].res, tf->pf[i].state, proc_time,
-                tf->pf[i].cmd);
+                tf->pf_len.res, tf->pf[i].res, ' ', tf->pf[i].state, ' ',
+                tf->pf[i].time.min, tf->pf[i].time.int_sec,
+                tf->pf[i].time.cent, tf->pf[i].cmd);
             displayed_i++;
         }
     }

@@ -64,6 +64,13 @@ typedef struct {
 } mem_infos_t;
 
 typedef struct {
+    double sec;
+    int int_sec;
+    int min;
+    int cent;
+} top_time_t;
+
+typedef struct {
     int pid;
     int uid;
     int gid;
@@ -90,7 +97,7 @@ typedef struct {
     char state;
     int cpu;
     int mem;
-    long long time;
+    top_time_t time;
     char *cmd;
 } proc_info_t;
 
