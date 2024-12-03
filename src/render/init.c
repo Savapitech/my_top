@@ -6,6 +6,7 @@
 */
 
 #include "top.h"
+
 #include <ncurses.h>
 #include <pwd.h>
 #include <stdlib.h>
@@ -117,8 +118,9 @@ void init_loop(tf_t *tf)
     get_cpu_infos(&tf->cpuf_curr);
     calculate_cpu_usage(&tf->cpuf_prev, &tf->cpuf_curr,
         tf->cpuf_percentages);
-    if (tf->pf)
-        free(tf->pf);
+    for (int i = 0; i < tf->processes.total; i++)
+        free(tf->pf[i].cmd);
+    free(tf->pf);
 }
 
 int init_ncurses(tf_t *tf)
@@ -135,6 +137,7 @@ int init_ncurses(tf_t *tf)
     tf->winsize = &winsize;
     while (tf->opened)
         init_loop(tf);
+    delwin(stdscr);
     endwin();
     return TOP_SUCCESS;
 }

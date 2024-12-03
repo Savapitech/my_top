@@ -5,12 +5,14 @@
 ** _
 */
 
-#include "top.h"
 #include <ctype.h>
 #include <grp.h>
+#include <linux/limits.h>
 #include <pwd.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "top.h"
 
 int get_name(tf_t *tf, int i, char *line)
 {

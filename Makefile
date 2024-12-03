@@ -52,4 +52,11 @@ test: $(NAME) $(TEST_OBJ)
 tests_run: test
 	./$<
 
-.PHONY: all clean fclean re test tests_run
+check: $(NAME)
+	-@ valgrind               \
+		--leak-check=full     \
+		--track-origins=yes   \
+		--error-limit=no --suppressions=ncurses.supp \
+		./$(NAME)
+
+.PHONY: all clean fclean re test tests_run check

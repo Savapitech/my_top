@@ -1,0 +1,20 @@
+{
+   ncurses_leak_EmitRange
+   Memcheck:Leak
+   match-leak-kinds: possible
+   ...
+   fun:EmitRange
+   fun:PutRange
+   fun:TransformLine
+   fun:doupdate_sp
+   ...
+}
+{
+   ncurses_leak_initsrc
+   Memcheck:Leak
+   match-leak-kinds: possible
+   ...
+   fun:newterm
+   ...
+}
+

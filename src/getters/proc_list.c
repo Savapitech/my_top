@@ -142,7 +142,7 @@ int get_proc_list(tf_t *tf)
     tf->processes.total = get_proc_nbr();
     if (!tf->processes.total)
         exit((fprintf(stderr, "top: Invalid proc number\n"), TOP_FAILURE));
-    tf->pf = malloc(tf->processes.total * sizeof *tf->pf);
+    tf->pf = calloc(tf->processes.total, sizeof *tf->pf);
     if (tf->pf == NULL)
         return -1;
     for (sd = readdir(dir); sd != NULL; sd = readdir(dir))
