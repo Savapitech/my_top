@@ -11,8 +11,9 @@
 
 #include "top.h"
 
-const char *get_value_tok(char *line, int skip)
+const char *get_value_tok(char const *line, int skip)
 {
+    static char out[1 << 8] = { 0 };
     char const *s = line;
     size_t length;
 
@@ -21,12 +22,11 @@ const char *get_value_tok(char *line, int skip)
         s += strspn(s, " ");
     }
     length = strcspn(s, " ");
-    line = malloc((length + 1) * sizeof *line);
-    if (line == NULL)
+    if (length >= sizeof out)
         return NULL;
-    memcpy(line, s, length);
-    line[length] = '\0';
-    return line;
+    memcpy(out, s, length);
+    out[length] = '\0';
+    return out;
 }
 
 int get_time(tf_t *tf, int i, char *line)

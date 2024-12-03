@@ -146,7 +146,7 @@ int compare_pid(
     const proc_info_t *first,
     const proc_info_t *second,
     bool const *arg);
-char const *get_value_tok(char *, int);
+const char *get_value_tok(char const *line, int skip);
 
 //core
 int top(int, char **);
