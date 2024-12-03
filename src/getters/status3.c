@@ -11,9 +11,11 @@
 
 #include "top.h"
 
-const char *get_value_tok(char const *line, int skip)
+static char const ZERO[] = "0";
+
+const char *get_value_tok_or_zero(char const *line, int skip)
 {
-    static char out[1 << 8] = { 0 };
+    char *out;
     char const *s = line;
     size_t length;
 
@@ -22,8 +24,9 @@ const char *get_value_tok(char const *line, int skip)
         s += strspn(s, " ");
     }
     length = strcspn(s, " ");
-    if (length >= sizeof out)
-        return NULL;
+    out = malloc((length + 1) * sizeof *out);
+    if (out == NULL)
+        return ZERO;
     memcpy(out, s, length);
     out[length] = '\0';
     return out;
@@ -31,12 +34,11 @@ const char *get_value_tok(char const *line, int skip)
 
 int get_time(tf_t *tf, int i, char *line)
 {
-    char const *toks[] = {
-        get_value_tok(line, 21),
-        get_value_tok(line, 13),
-        get_value_tok(line, 14)
-    };
+    int idx[] = { 21, 13, 14 };
+    char const *toks[ARRAY_SIZE(idx)];
 
+    for (size_t i = 0; i < ARRAY_SIZE(toks); i++)
+        toks[i] = get_value_tok_or_zero(line, idx[i]);
     tf->pf[i].time.sec = tf->uptime - (double)atoll(toks[0]) /
         sysconf(_SC_CLK_TCK);
     tf->pf[i].time.min = tf->pf[i].time.sec / 60;
@@ -48,5 +50,8 @@ int get_time(tf_t *tf, int i, char *line)
         (double)sysconf(_SC_CLK_TCK)) / tf->pf[i].time.sec;
     tf->pf_len.cpu = floatlen(tf->pf[i].cpu, 3) > tf->pf_len.cpu ?
         floatlen(tf->pf[i].cpu, 3) : tf->pf_len.cpu;
+    for (size_t i = 0; i < ARRAY_SIZE(toks); i++)
+        if (toks[i] != ZERO)
+            free((void *)toks[i]);
     return TOP_SUCCESS;
 }

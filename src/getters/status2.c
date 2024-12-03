@@ -13,17 +13,23 @@
 
 int get_pr(tf_t *tf, int i, char *line)
 {
-    tf->pf[i].pr = atoi(get_value_tok(line, 17));
+    char const *tok = get_value_tok_or_zero(line, 17);
+
+    tf->pf[i].pr = atoi(tok);
     tf->pf_len.pr = intlen(tf->pf[i].pr) > tf->pf_len.pr ?
         intlen(tf->pf[i].pr) : tf->pf_len.pr;
+    free((void *)tok);
     return TOP_SUCCESS;
 }
 
 int get_ni(tf_t *tf, int i, char *line)
 {
-    tf->pf[i].ni = atoi(get_value_tok(line, 18));
+    char const *tok = get_value_tok_or_zero(line, 18);
+
+    tf->pf[i].ni = atoi(tok);
     tf->pf_len.ni = intlen(tf->pf[i].ni) > tf->pf_len.ni ?
         intlen(tf->pf[i].ni) : tf->pf_len.ni;
+    free((void *)tok);
     return TOP_SUCCESS;
 }
 

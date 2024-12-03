@@ -146,8 +146,7 @@ int compare_pid(
     const proc_info_t *first,
     const proc_info_t *second,
     bool const *arg);
-const char *get_value_tok(char const *line, int skip);
-
+const char *get_value_tok_or_zero(char const *line, int skip);
 //core
 int top(int, char **);
 int parser(tf_t *);
