@@ -13,8 +13,14 @@
     #define TOP_FAILURE 84
     #define BLACK_ON_WHITE 1
     #define ARRAY_SIZE(array) ((sizeof array) / (sizeof array[0]))
+
     #include <ncurses.h>
     #include <sys/ioctl.h>
+
+    #define XCAT(val) #val
+    #define CAT(val) XCAT(val)
+
+    #define LONG_SIZE (sizeof CAT(LONG_MAX))
 
 typedef struct {
     char *str;
@@ -136,9 +142,11 @@ int stridx(char const *, char);
 int strisdigits(char *);
 int floatlen(float, int);
 int intlen(long long);
-int compare_pid(const void *, const void *);
-int compare_reverse_pid(const void *, const void *);
-const void *get_value_tok(char *, int);
+int compare_pid(
+    const proc_info_t *first,
+    const proc_info_t *second,
+    bool const *arg);
+char const *get_value_tok(char *, int);
 
 //core
 int top(int, char **);

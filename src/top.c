@@ -7,11 +7,17 @@
 
 #include "top.h"
 
+const tf_t BASE_TF_STATE = {
+    .opened = 1
+};
+
 int top(int ac, char **av)
 {
-    tf_t tf = { .ac = ac, .av = av, .opened = 1, .min_displayed_i = 0 };
+    tf_t tf = BASE_TF_STATE;
 
-    tf.pf_len = (proc_info_len_t){ 0 };
+    tf.ac = ac;
+    tf.av = av;
+    tf.opened = 1;
     init_ncurses(&tf);
     return TOP_SUCCESS;
 }
