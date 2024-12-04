@@ -38,6 +38,7 @@ const getters_t STAT_GETTERS[] = {
 const getters_t STATM_GETTERS[] = {
     { &get_res },
     { &get_virt },
+    { &get_shr },
     { NULL }
 };
 

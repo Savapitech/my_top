@@ -62,15 +62,15 @@ int get_res(tf_t *tf, int i, char *line)
 
 int get_shr(tf_t *tf, int i, char *line)
 {
+    char line2[400];
     char *p;
 
-    if (strncmp(line, "State:", 6) != 0) {
-        tf->pf[i].shr = 0;
-        return TOP_FAILURE;
-    }
-    p = line + 7;
-    while (isspace(*p))
-        ++p;
-    tf->pf[i].state = *p;
+    strcpy(line2, line);
+    p = strtok(line2, " ");
+    p = strtok(NULL, " ");
+    p = strtok(NULL, " ");
+    tf->pf[i].shr = atoll(p) * getpagesize() / 1024;
+    tf->pf_len.shr = intlen(tf->pf[i].shr) > tf->pf_len.shr ?
+        intlen(tf->pf[i].shr) : tf->pf_len.shr;
     return TOP_SUCCESS;
 }

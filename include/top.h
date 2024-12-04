@@ -71,6 +71,7 @@ typedef struct {
 
 typedef struct {
     double sec;
+    double su_time_sec;
     int int_sec;
     int min;
     int cent;
@@ -172,6 +173,7 @@ int get_uid(tf_t *, int, char *);
 int get_gid(tf_t *, int, char *);
 int get_virt(tf_t *, int, char *);
 int get_res(tf_t *, int, char *);
+int get_shr(tf_t *, int, char *);
 int get_pr(tf_t *, int, char *);
 int get_ni(tf_t *, int, char *);
 int get_time(tf_t *, int, char *);
