@@ -135,6 +135,7 @@ typedef struct {
     cpu_infos_t cpuf_curr;
     mem_infos_t mem_infos;
     double cpuf_percentages[8];
+    int logged_in_users;
 } tf_t;
 
 struct getters_s {
@@ -180,4 +181,5 @@ int get_time(tf_t *, int, char *);
 int get_cpu_infos(cpu_infos_t *);
 int calculate_cpu_usage(cpu_infos_t *, cpu_infos_t *, double *);
 void get_memory_infos(tf_t *);
+int get_logged_in_users(tf_t *);
 #endif /* TOP_H */
