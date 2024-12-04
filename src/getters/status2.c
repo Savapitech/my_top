@@ -6,7 +6,6 @@
 */
 
 #include "top.h"
-#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -57,6 +56,10 @@ int get_res(tf_t *tf, int i, char *line)
     tf->pf[i].res = atoll(p) * getpagesize() / 1024;
     tf->pf_len.res = intlen(tf->pf[i].res) > tf->pf_len.res ?
         intlen(tf->pf[i].res) : tf->pf_len.res;
+    tf->pf[i].mem = (double)tf->pf[i].res /
+        (tf->mem_infos.mem_total_mib * 1024.0) * 100;
+    tf->pf_len.mem = floatlen(tf->pf[i].mem, 3) > tf->pf_len.mem ?
+        floatlen(tf->pf[i].mem, 3) : tf->pf_len.mem;
     return TOP_SUCCESS;
 }
 
