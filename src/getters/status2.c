@@ -40,7 +40,7 @@ int get_virt(tf_t *tf, int i, char *line)
 
     strcpy(line2, line);
     p = strtok(line2, " ");
-    tf->pf[i].virt = atoll(p);
+    tf->pf[i].virt = atoll(p) * getpagesize() / 1024;
     tf->pf_len.virt = intlen(tf->pf[i].virt) > tf->pf_len.virt ?
         intlen(tf->pf[i].virt) : tf->pf_len.virt;
     return TOP_SUCCESS;
@@ -54,7 +54,7 @@ int get_res(tf_t *tf, int i, char *line)
     strcpy(line2, line);
     p = strtok(line2, " ");
     p = strtok(NULL, " ");
-    tf->pf[i].res = atoll(p);
+    tf->pf[i].res = atoll(p) * getpagesize() / 1024;
     tf->pf_len.res = intlen(tf->pf[i].res) > tf->pf_len.res ?
         intlen(tf->pf[i].res) : tf->pf_len.res;
     return TOP_SUCCESS;
