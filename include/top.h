@@ -117,6 +117,9 @@ typedef struct {
     char **av;
     flags_t flags;
     bool reverse_sort;
+    char *user;
+    double delay;
+    int frames;
     // win
     int opened;
     struct winsize *winsize;
@@ -140,6 +143,8 @@ struct getters_s {
 //utils
 int stridx(char const *, char);
 int strisdigits(char *);
+int strisfloat(char *);
+int strisstr(char *);
 int floatlen(float, int);
 int intlen(long long);
 int compare_pid(
@@ -147,6 +152,7 @@ int compare_pid(
     const proc_info_t *second,
     bool const *arg);
 const char *get_value_tok_or_zero(char const *line, int skip);
+
 //core
 int top(int, char **);
 int parser(tf_t *);

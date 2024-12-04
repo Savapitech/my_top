@@ -10,6 +10,7 @@
 #include <ncurses.h>
 #include <pwd.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 
@@ -20,7 +21,8 @@ void print_procs(tf_t *tf)
 
     for (int i = tf->min_displayed_i; i < tf->processes.total &&
         displayed_i < tf->winsize->ws_row - 7; i++) {
-        if (tf->pf[i].pid) {
+        if (tf->pf[i].pid && (!tf->user ||
+            !strcmp(getpwuid(tf->pf[i].uid)->pw_name, tf->user))) {
             printw("%*d %-*s %*d %*d %*lld %*lld",
                 tf->pf_len.pid, tf->pf[i].pid, tf->pf_len.uid,
                 getpwuid(tf->pf[i].uid)->pw_name, tf->pf_len.pr, tf->pf[i].pr,
@@ -126,6 +128,7 @@ void init_loop(tf_t *tf)
 int init_ncurses(tf_t *tf)
 {
     struct winsize winsize;
+    int frames = 1;
 
     initscr();
     start_color();
@@ -133,10 +136,10 @@ int init_ncurses(tf_t *tf)
     curs_set(0);
     init_pair(BLACK_ON_WHITE, COLOR_BLACK, COLOR_WHITE);
     keypad(stdscr, TRUE);
-    timeout(950);
+    timeout(tf->delay * 1000 ?: 3000);
     tf->winsize = &winsize;
-    while (tf->opened)
-        init_loop(tf);
+    while (tf->opened && (!tf->frames || frames <= tf->frames))
+        frames += (init_loop(tf), 1);
     delwin(stdscr);
     endwin();
     return TOP_SUCCESS;

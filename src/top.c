@@ -18,6 +18,7 @@ int top(int ac, char **av)
     tf.ac = ac;
     tf.av = av;
     tf.opened = 1;
+    parser(&tf);
     init_ncurses(&tf);
     return TOP_SUCCESS;
 }

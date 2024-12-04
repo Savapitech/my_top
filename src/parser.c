@@ -7,6 +7,7 @@
 
 #include "top.h"
 #include <ctype.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,54 +15,63 @@ static
 const char FLAGS[] = "Udnh";
 
 static
-void parse_flags_value(tf_t *tf, int i)
+void check_arg(void)
 {
-    switch (*tf->av[i]) {
-        case 'U':
-            tf->av[i]++;
-            if (!isalpha(*tf->av[i]))
-                i++;
-            if (i == tf->ac) {
-                fprintf(stderr, "top: -U requires argument");
-                exit(TOP_FAILURE);
-            }
-            tf->flags.user = tf->av[i];
+    if (stridx(FLAGS, optopt) >= 0)
+        exit((fprintf(stderr, "top: -%c requires argument\n", optopt),
+            TOP_FAILURE));
+    else if (isprint(optopt)) {
+        fprintf(stderr, "top: unknown option '%c'\n", optopt);
+        exit((print_usage(), TOP_FAILURE));
+    } else
+        exit((fprintf(stderr, "Unknown option character `\\x%x'.\n", optopt),
+            TOP_FAILURE));
+}
+
+static
+void switch_arg2(char c)
+{
+    switch (c) {
+        case 'h':
+            exit((print_usage(), TOP_SUCCESS));
             break;
+        case '?':
+        default:
+            check_arg();
     }
 }
 
 static
-void parse_flag(tf_t *tf, int i)
+void switch_arg(tf_t *tf, char c)
 {
-    tf->av[i]++;
-    for (; *tf->av[i] != '\0'; tf->av[i]++) {
-        if (stridx(FLAGS, *tf->av[i]) == -1) {
-            fprintf(stderr, "top: unknown option '%c'\n", *tf->av[i]);
-            print_usage();
-            exit(TOP_FAILURE);
-        }
-        if (*tf->av[i] == 'h') {
-            print_usage();
-            exit(TOP_SUCCESS);
-        }
-        parse_flags_value(tf, i);
+    switch (c) {
+        case 'U':
+            tf->user = optarg;
+            break;
+        case 'd':
+            if (strisstr(optarg))
+                exit((fprintf(stderr, "top: bad delay interval '%s'\n",
+                    optarg), TOP_FAILURE));
+            tf->delay = atof(optarg);
+            break;
+        case 'n':
+            if (!strisdigits(optarg))
+                exit((fprintf(stderr, "top: bad iterations argument '%s'\n",
+                    optarg), TOP_FAILURE));
+            tf->frames = atoi(optarg);
+            break;
+        default:
+            switch_arg2(c);
     }
-}
-
-static
-int parse_arg(tf_t *tf, int i)
-{
-    for (; *tf->av[i] != '\0'; tf->av[i]++) {
-        if (*tf->av[i] == '-')
-            parse_flag(tf, i);
-    }
-    return TOP_SUCCESS;
 }
 
 int parser(tf_t *tf)
 {
-    for (int i = 1; i < tf->ac; i++)
-        if (parse_arg(tf, i))
-            return TOP_FAILURE;
+    int c;
+
+    opterr = 0;
+    for (c = getopt(tf->ac, tf->av, "U:d:n:h"); c != -1;
+        c = getopt(tf->ac, tf->av, "U:d:n:h"))
+            switch_arg(tf, c);
     return TOP_SUCCESS;
 }
