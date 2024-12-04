@@ -28,20 +28,27 @@ CFLAGS += -Wall -Wextra -g3
 CFLAGS += -iquote ./include
 CFLAGS += -Wno-unused-parameter
 
+include utils.mk
+
 oui: $(NAME)
 
 $(BUILD_DIR)/%.o: %.c
 	@ mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -o $@ -c $<
+	@ $(CC) $(CFLAGS) -o $@ -c $<
+	@ $(LOG_TIME) "$(C_GREEN) CC $(C_PURPLE) $(notdir $@) $(C_RESET)"
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -lncurses -o $(NAME)
+	@ $(CC) $(CFLAGS) $(OBJ) -lncurses -o $(NAME)
+	@ $(LOG_TIME) "$(C_GREEN) CC $(C_PURPLE) $(notdir $@) $(C_RESET)"
+	@ $(LOG_TIME) "$(C_GREEN) OK Compilation finished $(C_RESET)"
 
 clean:
-	$(RM) $(OBJ)
+	@ $(RM) $(OBJ)
+	@ $(LOG_TIME) "$(C_YELLOW) RM $(C_PURPLE) $(OBJ) $(C_RESET)"
 
 fclean:
-	$(RM) -r $(NAME) $(BUILD_DIR)
+	@ $(RM) -r $(NAME) $(BUILD_DIR)
+	@ $(LOG_TIME) "$(C_YELLOW) RM $(C_PURPLE) $(NAME) $(BUILD_DIR) $(C_RESET)"
 
 .NOTPARALLEL: re
 re:	fclean oui
