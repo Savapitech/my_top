@@ -80,6 +80,7 @@ int get_state(tf_t *tf, int i, char *line)
 int get_uid(tf_t *tf, int i, char *line)
 {
     char *p;
+    char *username;
 
     if (strncmp(line, "Uid:", 4) != 0)
         return TOP_FAILURE;
@@ -87,10 +88,13 @@ int get_uid(tf_t *tf, int i, char *line)
     while (isspace(*p))
         ++p;
     tf->pf[i].uid = atoi(p);
-    tf->pf_len.uid = (int)strlen(get_user_name(tf->pf[i].uid)) >
-        tf->pf_len.uid ? strlen(get_user_name(tf->pf[i].uid)) :
+    username = get_user_name(tf->pf[i].uid);
+    if (!username)
+        return (free(username), TOP_FAILURE);
+    tf->pf_len.uid = (int)strlen(username) >
+        tf->pf_len.uid ? strlen(username) :
         (size_t)tf->pf_len.uid;
-    return TOP_SUCCESS;
+    return (free(username), TOP_SUCCESS);
 }
 
 int get_gid(tf_t *tf, int i, char *line)

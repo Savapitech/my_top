@@ -15,25 +15,34 @@
 #include <unistd.h>
 
 static
+void print_procs2(tf_t *tf, int i, char *username)
+{
+    printw("%*d %-*s %*d %*d %*lld %*lld %*lld",
+            tf->pf_len.pid, tf->pf[i].pid, tf->pf_len.uid,
+            username, tf->pf_len.pr, tf->pf[i].pr,
+            tf->pf_len.ni, tf->pf[i].ni, tf->pf_len.virt, tf->pf[i].virt,
+            tf->pf_len.res, tf->pf[i].res, tf->pf_len.shr, tf->pf[i].shr);
+    printw(" %1c %*.1f %*.1f %d:%02d.%02d %s\n", tf->pf[i].state,
+            tf->pf_len.cpu, tf->pf[i].cpu, tf->pf_len.mem, tf->pf[i].mem,
+            tf->pf[i].time.min, tf->pf[i].time.int_sec,
+            tf->pf[i].time.cent, tf->pf[i].cmd);
+}
+
+static
 void print_procs(tf_t *tf)
 {
     int displayed_i = 0;
+    char *username = NULL;
 
     for (int i = tf->min_displayed_i; i < tf->processes.total &&
         displayed_i < tf->winsize->ws_row - 7; i++) {
+        username = get_user_name(tf->pf[i].uid);
         if (tf->pf[i].pid && (!tf->user ||
-            !strcmp(get_user_name(tf->pf[i].uid), tf->user))) {
-            printw("%*d %-*s %*d %*d %*lld %*lld %*lld",
-                tf->pf_len.pid, tf->pf[i].pid, tf->pf_len.uid,
-                get_user_name(tf->pf[i].uid), tf->pf_len.pr, tf->pf[i].pr,
-                tf->pf_len.ni, tf->pf[i].ni, tf->pf_len.virt, tf->pf[i].virt,
-                tf->pf_len.res, tf->pf[i].res, tf->pf_len.shr, tf->pf[i].shr);
-            printw(" %1c %*.1f %*.1f %d:%02d.%02d %s\n", tf->pf[i].state,
-                tf->pf_len.cpu, tf->pf[i].cpu, tf->pf_len.mem, tf->pf[i].mem,
-                tf->pf[i].time.min, tf->pf[i].time.int_sec,
-                tf->pf[i].time.cent, tf->pf[i].cmd);
+            !strcmp(username, tf->user))) {
+            print_procs2(tf, i, username);
             displayed_i++;
         }
+        free(username);
     }
 }
 
