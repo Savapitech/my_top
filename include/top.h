@@ -182,4 +182,5 @@ int get_cpu_infos(cpu_infos_t *);
 int calculate_cpu_usage(cpu_infos_t *, cpu_infos_t *, double *);
 void get_memory_infos(tf_t *);
 int get_logged_in_users(tf_t *);
+char *get_user_name(int);
 #endif /* TOP_H */

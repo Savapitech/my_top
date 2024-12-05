@@ -7,8 +7,40 @@
 
 #include "top.h"
 #include <fcntl.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <utmp.h>
+
+static
+char *parse_uid(char *line, int uid)
+{
+    char *user = strtok(line, ":");
+
+    strtok(NULL, ":");
+    if (atoi(strtok(NULL, ":")) == uid)
+        return user;
+    return NULL;
+}
+
+char *get_user_name(int uid)
+{
+    char file[] = "/etc/passwd";
+    char line[400];
+    char *result;
+    FILE *fp;
+
+    fp = fopen(file, "r");
+    if (!fp)
+        return NULL;
+    while (fgets(line, 400, fp)) {
+        result = parse_uid(line, uid);
+        if (result)
+            break;
+    }
+    fclose(fp);
+    return result;
+}
 
 int get_logged_in_users(tf_t *tf)
 {

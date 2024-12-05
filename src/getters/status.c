@@ -87,8 +87,8 @@ int get_uid(tf_t *tf, int i, char *line)
     while (isspace(*p))
         ++p;
     tf->pf[i].uid = atoi(p);
-    tf->pf_len.uid = (int)strlen(getpwuid(tf->pf[i].uid)->pw_name) >
-        tf->pf_len.uid ? strlen(getpwuid(tf->pf[i].uid)->pw_name) :
+    tf->pf_len.uid = (int)strlen(get_user_name(tf->pf[i].uid)) >
+        tf->pf_len.uid ? strlen(get_user_name(tf->pf[i].uid)) :
         (size_t)tf->pf_len.uid;
     return TOP_SUCCESS;
 }

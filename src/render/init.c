@@ -22,10 +22,10 @@ void print_procs(tf_t *tf)
     for (int i = tf->min_displayed_i; i < tf->processes.total &&
         displayed_i < tf->winsize->ws_row - 7; i++) {
         if (tf->pf[i].pid && (!tf->user ||
-            !strcmp(getpwuid(tf->pf[i].uid)->pw_name, tf->user))) {
+            !strcmp(get_user_name(tf->pf[i].uid), tf->user))) {
             printw("%*d %-*s %*d %*d %*lld %*lld %*lld",
                 tf->pf_len.pid, tf->pf[i].pid, tf->pf_len.uid,
-                getpwuid(tf->pf[i].uid)->pw_name, tf->pf_len.pr, tf->pf[i].pr,
+                get_user_name(tf->pf[i].uid), tf->pf_len.pr, tf->pf[i].pr,
                 tf->pf_len.ni, tf->pf[i].ni, tf->pf_len.virt, tf->pf[i].virt,
                 tf->pf_len.res, tf->pf[i].res, tf->pf_len.shr, tf->pf[i].shr);
             printw(" %1c %*.1f %*.1f %d:%02d.%02d %s\n", tf->pf[i].state,
