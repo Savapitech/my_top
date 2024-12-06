@@ -13,6 +13,8 @@ void print_time(void)
     time_t tm = time(NULL);
     char *st = ctime(&tm);
 
+    if (!st)
+        return;
     st += 11;
     printw("top - %.8s", st);
 }
