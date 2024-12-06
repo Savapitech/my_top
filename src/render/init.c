@@ -133,7 +133,7 @@ void kill_handler(tf_t *tf)
 static
 void handle_ch(tf_t *tf, int ch)
 {
-    if (ch == KEY_DOWN && tf->min_displayed_i < tf->processes.total)
+    if (ch == KEY_DOWN && tf->min_displayed_i < tf->processes.total - 1)
         tf->min_displayed_i++;
     if (ch == KEY_UP && tf->min_displayed_i > 0)
         tf->min_displayed_i--;
