@@ -7,8 +7,10 @@
 
 #include "top.h"
 
+#include <errno.h>
 #include <ncurses.h>
 #include <pwd.h>
+#include <signal.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
@@ -104,6 +106,31 @@ void printer(tf_t *tf)
 }
 
 static
+void kill_handler(tf_t *tf)
+{
+    char kill_pid[10];
+    uint32_t pid_to_kill = tf->pf[tf->min_displayed_i].pid;
+
+    if (!tf->pf[tf->min_displayed_i].pid)
+        pid_to_kill = 1;
+    mvprintw(5, 0, "PID to signal/kill [default pid = %d] ",
+            pid_to_kill);
+    getnstr(kill_pid, 9);
+    if (strlen(kill_pid) && strlen(kill_pid) < 10 && strisdigits(kill_pid))
+        pid_to_kill = atoi(kill_pid);
+    if (kill(pid_to_kill, SIGTERM) == -1) {
+        if (errno == ESRCH)
+            mvprintw(5, 0, "Failed signal pid '%d' with '15': No such process",
+                pid_to_kill);
+        if (errno == EPERM)
+            mvprintw(5, 0, "Failed signal pid '%d' with '15': No perms       ",
+                pid_to_kill);
+        getch();
+        return;
+    }
+}
+
+static
 void handle_ch(tf_t *tf, int ch)
 {
     if (ch == KEY_DOWN && tf->min_displayed_i < tf->processes.total)
@@ -114,6 +141,8 @@ void handle_ch(tf_t *tf, int ch)
         tf->reverse_sort = !tf->reverse_sort;
     if (ch == 'q')
         tf->opened = 0;
+    if (ch == 'k')
+        kill_handler(tf);
 }
 
 static
