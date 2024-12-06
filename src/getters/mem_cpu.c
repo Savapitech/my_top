@@ -76,7 +76,7 @@ void get_memory_infos(tf_t *tf)
     uint64_t mem_available = get_meminfo_value("MemAvailable:");
     uint64_t swap_total = get_meminfo_value("SwapTotal:");
     uint64_t swap_free = get_meminfo_value("SwapFree:");
-    uint64_t mem_used = mem_total - mem_free - (buffers + cached);
+    uint64_t mem_used = mem_total - mem_available;
     uint64_t buff_cache = buffers + cached;
     uint64_t swap_used = swap_total - swap_free;
 
