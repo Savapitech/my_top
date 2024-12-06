@@ -94,8 +94,8 @@ int get_uid(tf_t *tf, int i, char *line)
     tf->pf_len.uid = (int)strlen(username) >
         tf->pf_len.uid ? strlen(username) :
         (size_t)tf->pf_len.uid;
-    if (tf->pf_len.uid > 7)
-        tf->pf_len.uid = 7;
+    if (tf->pf_len.uid > 8)
+        tf->pf_len.uid = 8;
     return (free(username), TOP_SUCCESS);
 }
 
