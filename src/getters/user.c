@@ -22,6 +22,8 @@ char *get_first_value(char const *line, char tok)
         if (line[len] == tok)
             break;
     result = malloc((len + 1) * sizeof *result);
+    if (result == NULL)
+        return NULL;
     memcpy(result, line, len);
     result[len] = '\0';
     return result;
